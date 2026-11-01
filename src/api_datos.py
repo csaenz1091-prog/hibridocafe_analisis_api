@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from imprimir_datos import consultar_datos_ventas, analizar_datos_ventas
+from imprimir_datos import obtener_datos_ventas
 
 app = Flask (__name__)
 app.json.sort_keys = False
@@ -27,8 +27,7 @@ def mensaje_bienvenida():
 def resumen_ventas():
     
     try:
-        analisis = consultar_datos_ventas()
-        resultado = analizar_datos_ventas(analisis)
+        resultado = obtener_datos_ventas()
         
         return jsonify({
             "estado": "exitoso",
