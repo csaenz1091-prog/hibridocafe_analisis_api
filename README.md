@@ -1,8 +1,11 @@
 # Dashboard de ventas de Híbrido Café
 
 La aplicación Flask incluye un dashboard con ingresos, unidades vendidas, precio
-promedio, productos más vendidos y ventas agrupadas por fecha, además de un
-formulario para registrar ventas en PostgreSQL.
+promedio, ingreso promedio diario, proyección de ingresos a 30 días, productos
+más vendidos, ventas agrupadas por fecha y un gráfico de ingresos por día de la
+semana en porcentajes, además de un formulario para registrar ventas en
+PostgreSQL. El promedio diario se calcula únicamente con fechas que tienen
+ventas y respeta el periodo seleccionado.
 
 ## Ejecutar
 
