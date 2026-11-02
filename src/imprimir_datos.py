@@ -5,9 +5,9 @@ from consulta_datos import consultar_datos_ventas
 
 
 #funcion para imprimir en consola y retornar un diccionario para la API
-def obtener_datos_ventas(fecha_inicio=None, fecha_fin=None):
+def obtener_datos_ventas(fecha_inicio=None, fecha_fin=None, incluir_pastel=False):
     
-    datos = consultar_datos_ventas()
+    datos = consultar_datos_ventas(incluir_pastel)
     
     if fecha_inicio or fecha_fin:
         fechas = pd.to_datetime(datos["fecha"], errors="coerce").dt.date

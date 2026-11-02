@@ -12,19 +12,26 @@ def crear_engine():
 
 
 #funcion para generar la consulta de SQL
-def consultar_datos_ventas():
+def consultar_datos_ventas(incluir_pastel=False):
     engine = crear_engine()
     
-    query = """
+    query = text("""
         select *
         from ventas v 
             full join productos p 
             on v.id_producto = p.id_producto
-            where p.nombre != 'jarabe' and p.nombre != 'leche deslac'
+            where p.nombre != 'jarabe' and p.nombre != 'leche deslac' and p.nombre != 'pana' and p.nombre != 'leche almendra'
+            and (:incluir_pastel OR p.nombre NOT ILIKE :pastel_pattern)
         order by v.fecha, p.id_producto asc
-    """
-    
-    datos = pd.read_sql(query, engine)
+    """)
+    datos = pd.read_sql(
+        query,
+        engine,
+        params={
+            "incluir_pastel": incluir_pastel,
+            "pastel_pattern": "%pastel%"
+        }
+    )
     
     return datos
 

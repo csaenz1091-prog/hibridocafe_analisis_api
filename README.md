@@ -26,6 +26,8 @@ generarse automáticamente. El precio se consulta del catálogo `productos`.
 El endpoint JSON está disponible en `/api/resumen`. Puede filtrarse con
 `?desde=AAAA-MM-DD&hasta=AAAA-MM-DD`, por ejemplo:
 `/api/resumen?desde=2026-10-01&hasta=2026-10-31`.
+El parámetro `incluir_pastel=true` incluye productos cuyo nombre contiene
+“pastel” en los cálculos del reporte; se excluyen por defecto.
 
 El catálogo de productos se sirve desde `/api/productos` y las ventas se guardan
 mediante `POST /api/ventas`.

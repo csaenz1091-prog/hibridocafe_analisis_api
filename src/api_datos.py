@@ -111,6 +111,14 @@ def crear_venta():
 def resumen_ventas():
     fecha_inicio = request.args.get("desde")
     fecha_fin = request.args.get("hasta")
+    incluir_pastel_texto = request.args.get("incluir_pastel", "false").lower()
+
+    if incluir_pastel_texto not in {"true", "false"}:
+        return jsonify({
+            "estado": "error",
+            "mensaje": "El parámetro incluir_pastel debe ser true o false."
+        }), 400
+    incluir_pastel = incluir_pastel_texto == "true"
 
     try:
         desde = date.fromisoformat(fecha_inicio) if fecha_inicio else None
@@ -128,7 +136,7 @@ def resumen_ventas():
         }), 400
 
     try:
-        resultado = obtener_datos_ventas(desde, hasta)
+        resultado = obtener_datos_ventas(desde, hasta, incluir_pastel)
         return jsonify({
             "estado": "exitoso",
             "datos": resultado
