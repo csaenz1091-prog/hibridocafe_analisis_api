@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17251e">
+  <title>Registrar venta | Híbrido Café</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202820;
+      --muted: #788078;
+      --paper: #f5f4ef;
+      --surface: #fff;
+      --line: #e8e9e3;
+      --green: #284c39;
+      --green-soft: #eaf1eb;
+      --accent: #c5834b;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    button, input, select { font: inherit; }
+    .app-shell { min-height: 100vh; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px max(24px, calc((100% - 1180px) / 2));
+      background: #17251e;
+      color: #fff;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border: 1px solid #718477;
+      border-radius: 12px;
+      color: #f1c99f;
+      font-size: 21px;
+    }
+
+    .brand-name { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+    .brand-caption { margin-top: 3px; color: #bac5bc; font-size: 12px; }
+    .nav-link {
+      padding: 10px 14px;
+      border: 1px solid #718477;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .nav-link:hover { background: #ffffff12; }
+
+    main { width: min(980px, calc(100% - 48px)); margin: 42px auto 64px; }
+    .page-heading { margin-bottom: 24px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1 { margin: 0; font-size: clamp(26px, 4vw, 36px); letter-spacing: -.04em; }
+    .intro { margin: 9px 0 0; color: var(--muted); font-size: 14px; }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--surface);
+      box-shadow: 0 4px 16px rgb(34 45 36 / 3%);
+    }
+    .sale-form { display: grid; gap: 20px; padding: clamp(20px, 5vw, 34px); }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .field { display: grid; gap: 8px; }
+    .field label { color: var(--ink); font-size: 13px; font-weight: 650; }
+    .field small { min-height: 16px; color: var(--muted); font-size: 11px; }
+
+    input, select {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid #dfe2db;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+    }
+    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+      outline: 3px solid #c5834b80;
+      outline-offset: 2px;
+    }
+
+    .estimate {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid #dfe9df;
+      border-radius: 10px;
+      background: var(--green-soft);
+    }
+    .estimate-label { color: #526357; font-size: 12px; }
+    .estimate-value { color: var(--green); font-size: 18px; font-weight: 750; }
+
+    .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 18px;
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .button.secondary { border-color: #dfe2db; background: #fff; color: var(--ink); }
+    .button:disabled { cursor: wait; opacity: .65; }
+
+    .status { margin: 0; color: var(--muted); font-size: 12px; }
+    .status.error { color: #a23832; }
+    .status.success { color: var(--green); font-weight: 600; }
+    footer { padding: 0 24px 28px; color: var(--muted); font-size: 11px; text-align: center; }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 15px 20px; }
+      main { width: calc(100% - 32px); margin-top: 30px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-actions { align-items: stretch; flex-direction: column; }
+      .form-actions .button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">H</div>
+        <div>
+          <div class="brand-name">Híbrido Café</div>
+          <div class="brand-caption">Registro de ventas</div>
+        </div>
+      </div>
+      <a class="nav-link" href="/">Volver a reportes</a>
+    </header>
+
+    <main>
+      <section class="page-heading" aria-labelledby="page-title">
+        <p class="eyebrow">Nueva operación</p>
+        <h1 id="page-title">Registrar una venta</h1>
+        <p class="intro">Agrega la fecha, el producto y las unidades vendidas.</p>
+      </section>
+
+      <section class="panel">
+        <form class="sale-form" id="sale-form">
+          <div class="form-grid">
+            <div class="field">
+              <label for="sale-date">Fecha de venta</label>
+              <input id="sale-date" name="fecha" type="date" required>
+              <small>Fecha en que se realizó la venta.</small>
+            </div>
+            <div class="field">
+              <label for="product">Producto</label>
+              <select id="product" name="id_producto" required disabled>
+                <option value="">Cargando productos…</option>
+              </select>
+              <small id="catalog-note">Selecciona un producto del catálogo.</small>
+            </div>
+            <div class="field">
+              <label for="quantity">Cantidad</label>
+              <input id="quantity" name="cantidad" type="number" min="1" step="1" value="1" required>
+              <small>Ingresa un número entero mayor que cero.</small>
+            </div>
+          </div>
+
+          <div class="estimate" aria-live="polite">
+            <span class="estimate-label">Importe estimado</span>
+            <output class="estimate-value" id="sale-estimate">—</output>
+          </div>
+
+          <div class="form-actions">
+            <button class="button" id="save-sale" type="submit" disabled>Guardar venta</button>
+            <a class="button secondary" href="/">Ir a reportes</a>
+          </div>
+          <p class="status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+    <footer>Híbrido Café · El registro se guarda en la base de datos de ventas</footer>
+  </div>
+
+  <script>
+    const form = document.getElementById("sale-form");
+    const productSelect = document.getElementById("product");
+    const quantityInput = document.getElementById("quantity");
+    const saveButton = document.getElementById("save-sale");
+    const statusMessage = document.getElementById("form-status");
+    const estimate = document.getElementById("sale-estimate");
+    const currencyFormat = new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+      maximumFractionDigits: 2
+    });
+    let products = [];
+
+    function setStatus(message, state = "") {
+      statusMessage.textContent = message;
+      statusMessage.className = `status ${state}`.trim();
+    }
+
+    function selectedProduct() {
+      return products.find((product) => String(product.id_producto) === productSelect.value);
+    }
+
+    function updateEstimate() {
+      const product = selectedProduct();
+      const quantity = Number(quantityInput.value);
+      estimate.textContent = product && Number.isFinite(quantity) && quantity > 0
+        ? product.precio == null
+          ? "Precio no disponible"
+          : currencyFormat.format(product.precio * quantity)
+        : "—";
+    }
+
+    async function loadProducts() {
+      try {
+        const response = await fetch("/api/productos");
+        const result = await response.json();
+        if (!response.ok || result.estado !== "exitoso") {
+          throw new Error(result.mensaje || "No fue posible cargar los productos.");
+        }
+
+        products = result.datos;
+        productSelect.replaceChildren();
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = products.length
+          ? "Selecciona un producto"
+          : "No hay productos disponibles";
+        productSelect.append(placeholder);
+
+        products.forEach((product) => {
+          const option = document.createElement("option");
+          option.value = String(product.id_producto);
+          option.textContent = product.precio == null
+            ? product.nombre
+            : `${product.nombre} · ${currencyFormat.format(product.precio)}`;
+          productSelect.append(option);
+        });
+
+        productSelect.disabled = products.length === 0;
+        saveButton.disabled = products.length === 0;
+        document.getElementById("catalog-note").textContent = products.length
+          ? "El precio mostrado se toma del catálogo."
+          : "No hay productos que se puedan registrar.";
+        updateEstimate();
+      } catch (error) {
+        productSelect.replaceChildren();
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "No se pudo cargar el catálogo";
+        productSelect.append(option);
+        setStatus(error.message || "No fue posible conectar con el servidor.", "error");
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      saveButton.disabled = true;
+      setStatus("Guardando venta…");
+      const payload = {
+        fecha: form.elements.fecha.value,
+        id_producto: productSelect.value,
+        cantidad: quantityInput.value
+      };
+
+      try {
+        const response = await fetch("/api/ventas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || result.estado !== "exitoso") {
+          throw new Error(result.mensaje || "No fue posible guardar la venta.");
+        }
+
+        quantityInput.value = "1";
+        updateEstimate();
+        setStatus(result.mensaje, "success");
+      } catch (error) {
+        setStatus(error.message || "No fue posible conectar con el servidor.", "error");
+      } finally {
+        saveButton.disabled = products.length === 0;
+      }
+    });
+
+    productSelect.addEventListener("change", updateEstimate);
+    quantityInput.addEventListener("input", updateEstimate);
+
+    const localDate = new Date();
+    localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
+    document.getElementById("sale-date").value = localDate.toISOString().slice(0, 10);
+    loadProducts();
+  </script>
+</body>
+</html>
