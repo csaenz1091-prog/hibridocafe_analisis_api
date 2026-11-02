@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17251e">
+  <title>Reporte de ventas | Híbrido Café</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202820;
+      --muted: #788078;
+      --paper: #f5f4ef;
+      --surface: #fff;
+      --line: #e8e9e3;
+      --green: #284c39;
+      --green-soft: #eaf1eb;
+      --accent: #c5834b;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    button, input { font: inherit; }
+
+    .app-shell { min-height: 100vh; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px max(24px, calc((100% - 1180px) / 2));
+      background: #17251e;
+      color: #fff;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+
+    .brand-mark {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border: 1px solid #718477;
+      border-radius: 12px;
+      color: #f1c99f;
+      font-size: 21px;
+    }
+
+    .brand-name { font-size: 15px; font-weight: 700; letter-spacing: .02em; }
+    .brand-caption { margin-top: 3px; color: #bac5bc; font-size: 12px; }
+
+    .topbar-label {
+      color: #d3dbd4;
+      font-size: 12px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    main { width: min(1180px, calc(100% - 48px)); margin: 42px auto 64px; }
+
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 25px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 0; font-size: clamp(26px, 4vw, 36px); letter-spacing: -.04em; }
+    .intro { margin: 9px 0 0; color: var(--muted); font-size: 14px; }
+    .updated { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+    .filter-panel, .panel, .metric-card {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: var(--surface);
+      box-shadow: 0 4px 16px rgb(34 45 36 / 3%);
+    }
+
+    .filter-panel {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .filter-title { flex-basis: 100%; margin: 0 0 1px; font-size: 13px; font-weight: 700; }
+    .field { display: grid; gap: 7px; }
+    .field label { color: var(--muted); font-size: 12px; font-weight: 600; }
+
+    input[type="date"] {
+      min-height: 41px;
+      padding: 8px 11px;
+      border: 1px solid #dfe2db;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    input:focus-visible, button:focus-visible {
+      outline: 3px solid #c5834b80;
+      outline-offset: 2px;
+    }
+
+    .button {
+      min-height: 41px;
+      padding: 0 17px;
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .button.secondary { border-color: #dfe2db; background: #fff; color: var(--ink); }
+    .button:disabled { cursor: wait; opacity: .65; }
+
+    .status {
+      min-height: 0;
+      margin: 0 0 0 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status:empty { display: none; }
+    .status.error { flex-basis: 100%; color: #a23832; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .metric-card { min-height: 135px; padding: 19px; }
+    .metric-label { color: var(--muted); font-size: 12px; font-weight: 600; }
+    .metric-value { margin-top: 17px; font-size: clamp(22px, 3vw, 29px); font-weight: 750; letter-spacing: -.04em; }
+    .metric-note { margin-top: 6px; color: var(--muted); font-size: 11px; }
+
+    .content-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr); gap: 18px; }
+    .panel { min-width: 0; padding: 21px; }
+    .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    h2 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+    .panel-subtitle { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .legend { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+    .chart {
+      display: flex;
+      min-height: 245px;
+      align-items: stretch;
+      gap: 11px;
+      overflow-x: auto;
+      padding: 25px 3px 4px;
+      margin-top: 8px;
+    }
+
+    .chart-column {
+      display: flex;
+      min-width: 43px;
+      flex: 1 0 43px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .bar-track {
+      display: flex;
+      width: 100%;
+      height: 185px;
+      align-items: flex-end;
+      justify-content: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bar {
+      width: min(26px, 72%);
+      min-height: 4px;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, #c98750, #a96736);
+    }
+
+    .chart-date { color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .empty-chart { display: grid; width: 100%; place-items: center; color: var(--muted); font-size: 13px; }
+
+    .table-wrap { overflow-x: auto; margin-top: 18px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { padding: 0 10px 11px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+    td { padding: 12px 10px; border-top: 1px solid #eef0eb; font-size: 12px; }
+    td:first-child { padding-left: 0; font-weight: 600; }
+    th:first-child { padding-left: 0; }
+    td.numeric, th.numeric { text-align: right; white-space: nowrap; }
+    .rank { display: inline-grid; width: 22px; height: 22px; place-items: center; margin-right: 8px; border-radius: 7px; background: var(--green-soft); color: var(--green); font-size: 10px; }
+    .empty-row { padding: 22px 0; color: var(--muted); text-align: center; }
+
+    footer { padding: 0 24px 28px; color: var(--muted); font-size: 11px; text-align: center; }
+
+    @media (max-width: 850px) {
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .content-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { padding: 15px 20px; }
+      .topbar-label { display: none; }
+      main { width: calc(100% - 32px); margin-top: 30px; }
+      .page-heading { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .filter-panel { align-items: stretch; }
+      .field { flex: 1 1 140px; }
+      input[type="date"] { width: 100%; }
+      .filter-panel .button { flex: 1 1 auto; }
+      .metrics { gap: 10px; }
+      .metric-card { min-height: 120px; padding: 15px; }
+      .metric-value { margin-top: 13px; }
+      .panel { padding: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">H</div>
+        <div>
+          <div class="brand-name">Híbrido Café</div>
+          <div class="brand-caption">Panel de análisis</div>
+        </div>
+      </div>
+      <div class="topbar-label">Reporte de ventas</div>
+    </header>
+
+    <main>
+      <section class="page-heading" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Resumen del negocio</p>
+          <h1 id="page-title">Reporte de ventas</h1>
+          <p class="intro" id="report-period">Consulta tus resultados por periodo.</p>
+        </div>
+        <div class="updated" id="updated-at" aria-live="polite"></div>
+      </section>
+
+      <form class="filter-panel" id="date-filter">
+        <h2 class="filter-title">Filtrar por fecha</h2>
+        <div class="field">
+          <label for="date-from">Desde</label>
+          <input id="date-from" name="desde" type="date">
+        </div>
+        <div class="field">
+          <label for="date-to">Hasta</label>
+          <input id="date-to" name="hasta" type="date">
+        </div>
+        <button class="button" id="apply-filter" type="submit">Ver reporte</button>
+        <button class="button secondary" id="clear-filter" type="button">Ver todo</button>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </form>
+
+      <section class="metrics" aria-label="Indicadores de ventas">
+        <article class="metric-card">
+          <div class="metric-label">Ingresos del periodo</div>
+          <div class="metric-value" id="total-revenue">—</div>
+          <div class="metric-note">Ventas calculadas en MXN</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">Unidades vendidas</div>
+          <div class="metric-value" id="total-units">—</div>
+          <div class="metric-note">Cantidad total de productos</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">Precio promedio</div>
+          <div class="metric-value" id="average-price">—</div>
+          <div class="metric-note">Promedio por registro de venta</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">Día con más unidades</div>
+          <div class="metric-value" id="best-day">—</div>
+          <div class="metric-note" id="best-day-note">Fecha con más unidades vendidas</div>
+        </article>
+      </section>
+
+      <section class="content-grid" aria-label="Detalle de ventas">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Ingresos por día</h2>
+              <p class="panel-subtitle">Importe total de ventas en cada fecha</p>
+            </div>
+            <div class="legend"><span class="legend-dot"></span>Ingresos</div>
+          </div>
+          <div class="chart" id="daily-chart" role="img" aria-label="Gráfica de ingresos diarios"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Fecha</th><th class="numeric">Unidades</th><th class="numeric">Ingresos</th></tr>
+              </thead>
+              <tbody id="daily-rows"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Productos más vendidos</h2>
+              <p class="panel-subtitle">Clasificados por unidades vendidas</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Producto</th><th class="numeric">Unidades</th></tr>
+              </thead>
+              <tbody id="product-rows"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+    </main>
+    <footer>Híbrido Café · Reporte basado en los datos de ventas disponibles</footer>
+  </div>
+
+  <script>
+    const form = document.getElementById("date-filter");
+    const statusMessage = document.getElementById("status");
+    const applyButton = document.getElementById("apply-filter");
+    const currencyFormat = new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+      maximumFractionDigits: 2
+    });
+    const numberFormat = new Intl.NumberFormat("es-MX");
+    const dateFormat = new Intl.DateTimeFormat("es-MX", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC"
+    });
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? String(value) : dateFormat.format(date);
+    }
+
+    function setStatus(message, isError = false) {
+      statusMessage.textContent = message;
+      statusMessage.classList.toggle("error", isError);
+    }
+
+    function makeCell(text, className = "") {
+      const cell = document.createElement("td");
+      cell.textContent = text;
+      if (className) cell.className = className;
+      return cell;
+    }
+
+    function renderDailyRows(sales) {
+      const body = document.getElementById("daily-rows");
+      body.replaceChildren();
+      if (!sales.length) {
+        const row = body.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 3;
+        cell.className = "empty-row";
+        cell.textContent = "No hay ventas para este periodo.";
+        return;
+      }
+
+      sales.forEach((sale) => {
+        const row = body.insertRow();
+        row.append(makeCell(formatDate(sale.fecha)));
+        row.append(makeCell(numberFormat.format(sale.cantidad || 0), "numeric"));
+        row.append(makeCell(currencyFormat.format(sale.ingreso_total || 0), "numeric"));
+      });
+    }
+
+    function renderChart(sales) {
+      const chart = document.getElementById("daily-chart");
+      chart.replaceChildren();
+      if (!sales.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-chart";
+        empty.textContent = "No hay ventas para mostrar.";
+        chart.append(empty);
+        return;
+      }
+
+      const maxRevenue = sales.reduce(
+        (maximum, sale) => Math.max(maximum, Number(sale.ingreso_total) || 0),
+        0
+      );
+      sales.forEach((sale) => {
+        const column = document.createElement("div");
+        column.className = "chart-column";
+        const barTrack = document.createElement("div");
+        barTrack.className = "bar-track";
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        const revenue = Number(sale.ingreso_total) || 0;
+        const height = maxRevenue > 0 ? Math.max(4, (revenue / maxRevenue) * 100) : 4;
+        bar.style.height = `${height}%`;
+        bar.title = `${formatDate(sale.fecha)}: ${currencyFormat.format(revenue)}`;
+        bar.setAttribute("aria-label", bar.title);
+        barTrack.append(bar);
+        const label = document.createElement("span");
+        label.className = "chart-date";
+        label.textContent = formatDate(sale.fecha).replace(/\s+\d{4}$/, "");
+        column.append(barTrack, label);
+        chart.append(column);
+      });
+    }
+
+    function renderProducts(products) {
+      const body = document.getElementById("product-rows");
+      body.replaceChildren();
+      if (!products.length) {
+        const row = body.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 2;
+        cell.className = "empty-row";
+        cell.textContent = "No hay productos para mostrar.";
+        return;
+      }
+
+      products.forEach((product, index) => {
+        const row = body.insertRow();
+        const name = document.createElement("td");
+        const rank = document.createElement("span");
+        rank.className = "rank";
+        rank.textContent = String(index + 1);
+        name.append(rank, document.createTextNode(product.nombre ?? "Sin nombre"));
+        row.append(name, makeCell(numberFormat.format(product.cantidad || 0), "numeric"));
+      });
+    }
+
+    function renderReport(data) {
+      const dailySales = Array.isArray(data.ventas_por_fecha) ? data.ventas_por_fecha : [];
+      const products = Array.isArray(data.top_productos) ? data.top_productos : [];
+      const bestDay = Array.isArray(data.top_fecha) ? data.top_fecha[0] : null;
+
+      document.getElementById("total-revenue").textContent =
+        currencyFormat.format(data["ingreso total"] ?? 0);
+      document.getElementById("total-units").textContent =
+        numberFormat.format(data.unidades_vendidas ?? 0);
+      document.getElementById("average-price").textContent =
+        data.promedio_precio == null ? "—" : currencyFormat.format(data.promedio_precio);
+      document.getElementById("best-day").textContent =
+        bestDay ? formatDate(bestDay.fecha) : "—";
+      document.getElementById("best-day-note").textContent = bestDay
+        ? `${numberFormat.format(bestDay.cantidad || 0)} unidades vendidas`
+        : "Sin ventas en el periodo";
+
+      renderChart(dailySales);
+      renderDailyRows(dailySales);
+      renderProducts(products);
+
+      const from = document.getElementById("date-from").value;
+      const to = document.getElementById("date-to").value;
+      document.getElementById("report-period").textContent =
+        from || to
+          ? `Periodo: ${from ? formatDate(from) : "inicio"} – ${to ? formatDate(to) : "hoy"}`
+          : "Mostrando todos los datos de ventas disponibles.";
+      document.getElementById("updated-at").textContent =
+        `Actualizado ${new Intl.DateTimeFormat("es-MX", {
+          hour: "2-digit",
+          minute: "2-digit"
+        }).format(new Date())}`;
+    }
+
+    async function loadReport() {
+      const params = new URLSearchParams();
+      const from = document.getElementById("date-from").value;
+      const to = document.getElementById("date-to").value;
+      if (from) params.set("desde", from);
+      if (to) params.set("hasta", to);
+
+      applyButton.disabled = true;
+      setStatus("Cargando reporte…");
+      try {
+        const response = await fetch(`/api/resumen?${params.toString()}`);
+        const result = await response.json();
+        if (!response.ok || result.estado !== "exitoso") {
+          throw new Error(result.mensaje || "No fue posible cargar el reporte.");
+        }
+        renderReport(result.datos);
+        setStatus("");
+      } catch (error) {
+        setStatus(error.message || "No fue posible conectar con el servidor.", true);
+      } finally {
+        applyButton.disabled = false;
+      }
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      loadReport();
+    });
+
+    document.getElementById("clear-filter").addEventListener("click", () => {
+      form.reset();
+      loadReport();
+    });
+
+    loadReport();
+  </script>
+</body>
+</html>
